@@ -33,10 +33,10 @@ class TurtleBot:
     def update_pose(self, data):
         """Current Position of the robot."""
 	x = data.data.split(" ")
-	self.pose.x = x[0]
-	self.pose.y = x[1]
-	rospy.loginfo(rospy.get_caller_id() + "LANG: " + self.pose.x)
-	rospy.loginfo(rospy.get_caller_id() + "LONG: " + self.pose.y)
+	self.pose.x = float(x[0])
+	self.pose.y = float(x[1])
+	rospy.loginfo(rospy.get_caller_id() + "LANG: " + str(self.pose.x))
+	rospy.loginfo(rospy.get_caller_id() + "LONG: " + str(self.pose.y))
 
 	
 

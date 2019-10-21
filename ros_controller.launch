@@ -17,10 +17,10 @@
   <param name="start_button" value="11" />
   <node pkg="ros_controller" type="turtle" name="teleop"/>
 
-  <!-- start rosaria -->
+  <!-- start rosaria 
   <node pkg="rosaria" type="RosAria" name="rosaria">
     <param name="autorepeat_rate" value="1" />
-  </node> 
+  </node> -->
 
  <!-- Transform controller messages to twist -->
   <node pkg="teleop_twist_joy" type="teleop_node" name="joystick_to_twist">
@@ -35,5 +35,9 @@
 
    <!-- SetLocation -->
    <node pkg="ros_controller" type="listener.py" name="listener" >
+   </node>
+
+   <!-- Odom -->
+   <node pkg="ros_controller" type="odom" name="odom" >
    </node>
 </launch>
