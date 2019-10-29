@@ -4,7 +4,7 @@ import rospy
 import subprocess
 import math
 from std_msgs.msg import String
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Point, Twist
 from sensor_msgs.msg import Joy
 from turtlesim.msg import Pose
 from gotogoal import *
@@ -54,14 +54,27 @@ def callback(data):
 			print(degree_to_goal)
 			#Get old angle_to_goal
 			oldAngleToGoal = -58.3924977503
+			#if flip == True:
+			#	new_angle_to_goal - selectAngle
+			#	simAngle = selectAngle
+			#	flip = false
+			#else:
+			#	simAngle = simAngle - 0.02
+			#publisher
 			#Start turning code
 			if abs(angle_to_goal - oldAngleToGoal) > 0.1:
 				#test in real lyf
-				speed = 0.3
-				oldAngleToGoal += 0.3
+				#speed = 0.3
+				#0.02 = 1 degree turn
+				oldAngleToGoal -= 0.3
+				speed.linear.x = 0.0
+				speed.angular.z = 0.3
+			pub.publish(speed)
 			#TODO: Make this repeatable theta is old 2nd
+			
 		if data.buttons[6] == 1:
 			print("Succes SelectPress")
+			print(flip)
 			homeX = 0.0
 			homeY = 0.0
 			goalX = 0.0
@@ -90,6 +103,8 @@ def callback(data):
 			print(inc_y)
 			#Orientation
 			angle_to_goal = atan2(inc_y, inc_x)
+			selectAngle = angle_to_goal
+			flip = None
 			print(angle_to_goal)
 			#Change radials to degrees
 			degree_to_goal = math.degrees(angle_to_goal)
@@ -116,11 +131,6 @@ def chatterCallback(data):
 	global kaas
 	kaas = data.data
 
-def write_file_goal(data):
-	f = open("/home/rosw/catkin_ws/src/ros_controller/src/goal.txt", "w")
-	f.write(data)
-	f.close()
-
 def write_file(data):
 	f = open("/home/rosw/catkin_ws/src/ros_controller/src/safeLocation.txt", "w")
 	f.write(data)
@@ -132,8 +142,24 @@ def read_file():
 	f.close()
 	return data
 
+def write_file_goal(data):
+	f = open("/home/rosw/catkin_ws/src/ros_controller/src/goal.txt", "w")
+	f.write(data)
+	f.close()
+
 def read_goal():
 	f = open("/home/rosw/catkin_ws/src/ros_controller/src/goal.txt", "r")
+	data = f.readline()
+	f.close()
+	return data
+
+def old_write_file_goal(data):
+	f = open("/home/rosw/catkin_ws/src/ros_controller/src/oldGoal.txt", "w")
+	f.write(data)
+	f.close()
+
+def old_read_goal():
+	f = open("/home/rosw/catkin_ws/src/ros_controller/src/oldGoal.txt", "r")
 	data = f.readline()
 	f.close()
 	return data
@@ -141,7 +167,13 @@ def read_goal():
 def start():
         # publishing to "turtle1/cmd_vel" to control turtle1
         global pub
-        pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
+	global speed
+	global flip
+	global selectAngle
+	global simAngle
+        #pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
+	pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
+	speed = Twist()
         # subscribed to joystick inputs on topic "joy"
         rospy.Subscriber("joy", Joy, callback)
 	rospy.Subscriber("/chatter", String, chatterCallback)
