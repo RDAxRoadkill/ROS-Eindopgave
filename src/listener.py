@@ -76,18 +76,14 @@ def callback(data):
 
 			if degree_to_goal < 0:
 				degree_to_goal = degree_to_goal * -1
-				
+				speed.linear.x = 2.0
 				for i in range(10):
-					speed.linear.x = 10.0
-					//speed.angular.z = (degree_to_goal*-1.1173)
-                    speed.angular.z = (degree_to_goal*-40.1173)
+					speed.angular.z = (degree_to_goal*-1.1173)
 
 			elif degree_to_goal > 0:
-				
+				speed.linear.x = 2.0
 				for i in range(10):
-					speed.linear.x = 10.0
-					//speed.angular.z = (degree_to_goal*1.1173)
-                    speed.angular.z = (degree_to_goal*40.1173)
+					speed.angular.z = (degree_to_goal*1.1173)
 
 			else:
 				print("gedraaid")
@@ -95,7 +91,7 @@ def callback(data):
 			pub.publish(speed)
 			
 			time.sleep(2)
-			speed.linear.x = 10.0
+			speed.linear.x = 2.0
 			speed.angular.z = 0.0	
 			pub.publish(speed)		
 
@@ -185,7 +181,7 @@ def start():
         global pub
 	global speed
         pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
-	#pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
+	pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
 	speed = Twist()
         # subscribed to joystick inputs on topic "joy"
         rospy.Subscriber("joy", Joy, callback)
