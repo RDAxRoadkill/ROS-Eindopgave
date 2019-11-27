@@ -33,9 +33,9 @@
     <param name="port" type="string" value="/dev/ttyACM0"/>
    </node> 
 
-   <!-- SetLocation -->
+   <!-- SetLocation
    <node pkg="ros_controller" type="listener.py" name="listener" >
-   </node>
+   </node>  -->
 
    <!-- Logger
    <node pkg="ros_controller" type="locatioinlogger.py" name="locationlogger" >
