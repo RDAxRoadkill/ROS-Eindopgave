@@ -11,8 +11,7 @@ from turtlesim.msg import Pose
 from gotogoal import *
 from ros_controller.srv import *
 
-
-kaas = "5.0 5.0"
+currentPos = "5.0 5.0"
 goal = "5.0 7.0"
 newgoal = "6.0 7.0"
 
@@ -177,18 +176,18 @@ def old_read_goal():
 	return data
 		
 def start():
-        # publishing to "turtle1/cmd_vel" to control turtle1
-        global pub
+    #publishing to "turtle1/cmd_vel" to control turtle1
+    global pub
 	global speed
-        pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
+    #pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
 	pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
 	speed = Twist()
-        # subscribed to joystick inputs on topic "joy"
-        rospy.Subscriber("joy", Joy, callback)
+    # subscribed to joystick inputs on topic "joy"
+    rospy.Subscriber("joy", Joy, callback)
 	rospy.Subscriber("/chatter", String, chatterCallback)
-        # starts the node
-        rospy.init_node('Joy2Turtle')
-        rospy.spin()
+    # starts the node
+    rospy.init_node('Joy2Turtle')
+    rospy.spin()
 
 if __name__ == '__main__':
      start()
