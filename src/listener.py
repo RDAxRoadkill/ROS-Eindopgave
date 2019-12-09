@@ -126,7 +126,8 @@ def goToAngle():
 	#Differences should be 40.0 & 25.0
 	in_x = newGoalX - currentPosX
 	in_y = newGoalY - currentPosY
-	print("X difference: " + in_x + " Y difference: " +in_y)
+	print("X difference: " +  str(in_x))
+	print(" Y difference: " + str(in_y))
 
 	#Atan2 calc like old attempt
 	angle_to_goal = atan2(in_y, in_x)
@@ -138,14 +139,14 @@ def goToAngle():
 	print("Angle to goal in degrees: " + str(degree_to_goal))
 
 	while degree_to_goal != currentPos:
-		print("Degree to goal: " + degree_to_goal)
-		print("CurrentPos: " + currentPos)
+		print("Degree to goal: " + str(degree_to_goal))
+		print("CurrentPos: " + str(currentPos))
 
 		#TODO: Add right/Left logic here. currently just turning one way
 		speed.linear.x = 1.0
 		time.sleep(100)
 		currentPos = currentPos + 1.0
-		print("Updated currentPos" + currentPos)
+		print("Updated currentPos" + str(currentPos))
 		time.sleep(100)
 
 
@@ -200,17 +201,17 @@ def oldAttempt():
 		pub.publish(speed)		
 
 def start():
-    global pub
+	global pub
 	global speed
-    pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
+	pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
 	#pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
 	speed = Twist()
     # subscribed to joystick inputs on topic "joy"
-    rospy.Subscriber("joy", Joy, callback)
+	rospy.Subscriber("joy", Joy, callback)
 	rospy.Subscriber("/chatter", String, chatterCallback)
     # starts the node
-    rospy.init_node('Joy2Turtle')
-    rospy.spin()
+	rospy.init_node('Joy2Turtle')
+	rospy.spin()
 
 if __name__ == '__main__':
      start()
