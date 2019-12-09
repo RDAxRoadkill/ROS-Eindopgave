@@ -11,7 +11,8 @@ from turtlesim.msg import Pose
 from gotogoal import *
 from ros_controller.srv import *
 
-currentPos = "5.0 5.0"
+
+kaas = "5.0 5.0"
 goal = "5.0 7.0"
 newgoal = "6.0 7.0"
 
@@ -76,13 +77,12 @@ def callback(data):
 			if degree_to_goal < 0:
 				degree_to_goal = degree_to_goal * -1
 				speed.linear.x = 2.0
-				for i in range(10):
-					speed.angular.z = (degree_to_goal*-1.1173)
+				speed.angular.z = (-degree_to_goal*2)
 
 			elif degree_to_goal > 0:
+				degree_to_goal = degree_to_goal * 1
 				speed.linear.x = 2.0
-				for i in range(10):
-					speed.angular.z = (degree_to_goal*1.1173)
+				speed.angular.z = (degree_to_goal*2)
 
 			else:
 				print("gedraaid")
@@ -90,7 +90,7 @@ def callback(data):
 			pub.publish(speed)
 			
 			time.sleep(2)
-			speed.linear.x = 2.0
+			speed.linear.x = 0.0
 			speed.angular.z = 0.0	
 			pub.publish(speed)		
 
@@ -102,14 +102,10 @@ def callback(data):
 		if data.buttons[6] == 1 and buttonInSelect == False:
 			buttonInSelect = True
 			global buttonInSelect 
-
 			print("Succes SelectPress")
-		
 			write_file("")
 			write_file_goal("")
-
 			print("Orientation reset")
-
 
 		if data.buttons[6] == 0:
 			buttonInSelect = False
@@ -176,18 +172,18 @@ def old_read_goal():
 	return data
 		
 def start():
-    #publishing to "turtle1/cmd_vel" to control turtle1
-    global pub
+        # publishing to "turtle1/cmd_vel" to control turtle1
+        global pub
 	global speed
-    #pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
-	pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
+        pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
+	#pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
 	speed = Twist()
-    # subscribed to joystick inputs on topic "joy"
-    rospy.Subscriber("joy", Joy, callback)
+        # subscribed to joystick inputs on topic "joy"
+        rospy.Subscriber("joy", Joy, callback)
 	rospy.Subscriber("/chatter", String, chatterCallback)
-    # starts the node
-    rospy.init_node('Joy2Turtle')
-    rospy.spin()
+        # starts the node
+        rospy.init_node('Joy2Turtle')
+        rospy.spin()
 
 if __name__ == '__main__':
      start()
