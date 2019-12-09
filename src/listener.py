@@ -117,22 +117,22 @@ def goToAngle():
 	#Using a constant turning rate, in a loop robot SHOULD turn
 
 	#Keeping calculation exactly the same
-	currentposX = 0.0
-	currentposY = 0.0
+	currentX = 0.0
+	currentY = 0.0
 
 	newGoalX = 40.0
 	newGoalY = 25.0
 
 	#Differences should be 40.0 & 25.0
-	in_x = newGoalX - currentPosX
-	in_y = newGoalY - currentPosY
+	in_x = newGoalX - currentX
+	in_y = newGoalY - currentY
 	print("X difference: " +  str(in_x))
 	print(" Y difference: " + str(in_y))
 
 	#Atan2 calc like old attempt
 	angle_to_goal = atan2(in_y, in_x)
 	#Calc new value for goal
-	currentPos = atan2(currentposX, currentPosY)
+	currentPos = atan2(currentX, currentY)
 	print("Angle to goal in radians: " + str(angle_to_goal))
 
 	degree_to_goal = math.degrees(angle_to_goal)
@@ -143,11 +143,13 @@ def goToAngle():
 		print("CurrentPos: " + str(currentPos))
 
 		#TODO: Add right/Left logic here. currently just turning one way
+		#Note, adding too big a difference to x or z makes the turtle spin really fast, basically causing bugs
 		speed.linear.x = 1.0
-		time.sleep(100)
+		speed.linear.z = 1.0
+		pub.publish(sleep)
+		time.sleep(10)
 		currentPos = currentPos + 1.0
 		print("Updated currentPos" + str(currentPos))
-		time.sleep(100)
 
 
 # Attempt 00 to turn robot
