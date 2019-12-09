@@ -44,55 +44,8 @@ def callback(data):
 
 			print("Success StartButton")
 
-			currentposX = 0.0
-			currentposY = 0.0
-
-			y = read_file()
-			print("Current location: " + y)
-						
-	   		y = y.split(" ")
-
-        		currentPosX = float(y[0])
-        		currentPosY = float(y[1])
-
-
-			x = read_goal()
-			print("Goal location: " + x)
-
-	   		x = x.split(" ")
-
-			newGoalX = float(x[0])
-			newGoalY = float(x[1])
-
-			in_x = newGoalX - currentPosX
-			in_y = newGoalY - currentPosY
-
-			angle_to_goal = atan2(in_y, in_x)
-			print("Angle to goal in radians: " + str(angle_to_goal))
-
-			degree_to_goal = math.degrees(angle_to_goal)
-			print("Angle to goal in degrees: " + str(degree_to_goal))
-
-			if degree_to_goal < 0:
-				degree_to_goal = degree_to_goal * -1
-				speed.linear.x = 2.0
-				speed.angular.z = (-degree_to_goal*2)
-
-			elif degree_to_goal > 0:
-				degree_to_goal = degree_to_goal * 1
-				speed.linear.x = 2.0
-				speed.angular.z = (degree_to_goal*2)
-
-			else:
-				print("gedraaid")
-
-			pub.publish(speed)
-			
-			time.sleep(2)
-			speed.linear.x = 0.0
-			speed.angular.z = 0.0	
-			pub.publish(speed)		
-
+			# Here we can use different attempts to turn robot
+			oldAttempt()
 
 		if data.buttons[7] == 0:
 			buttonInStart = False
@@ -158,7 +111,63 @@ def read_goal():
 	data = f.readline()
 	f.close()
 	return data
-		
+
+# Attempt 01 to turn robot
+def goToAngle():
+
+# Attempt 02 to turn robot
+def goToAngleTry2():
+
+# Attempt 00 to turn robot
+def oldAttempt():
+	currentposX = 0.0
+	currentposY = 0.0
+
+	y = read_file()
+	print("Current location: " + y)
+						
+	y = y.split(" ")
+
+    currentPosX = float(y[0])
+    currentPosY = float(y[1])
+
+	x = read_goal()
+	print("Goal location: " + x)
+
+	x = x.split(" ")
+
+	newGoalX = float(x[0])
+	newGoalY = float(x[1])
+
+	in_x = newGoalX - currentPosX
+	in_y = newGoalY - currentPosY
+
+	angle_to_goal = atan2(in_y, in_x)
+	print("Angle to goal in radians: " + str(angle_to_goal))
+
+	degree_to_goal = math.degrees(angle_to_goal)
+	print("Angle to goal in degrees: " + str(degree_to_goal))
+
+	if degree_to_goal < 0:
+		degree_to_goal = degree_to_goal * -1
+		speed.linear.x = 2.0
+		speed.angular.z = (-degree_to_goal*2)
+
+	elif degree_to_goal > 0:
+		degree_to_goal = degree_to_goal * 1
+		speed.linear.x = 2.0
+		speed.angular.z = (degree_to_goal*2)
+
+	else:
+		print("gedraaid")
+
+		pub.publish(speed)
+			
+		time.sleep(2)
+		speed.linear.x = 0.0
+		speed.angular.z = 0.0	
+		pub.publish(speed)		
+
 def start():
     global pub
 	global speed
