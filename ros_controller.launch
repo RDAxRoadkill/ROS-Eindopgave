@@ -28,22 +28,15 @@
     <remap from="/cmd_vel" to="/RosAria/cmd_vel"/>
   </node>
 
-  <!-- Arduino GPS connect -->
+  <!-- Arduino GPS connect 
    <node name="serial_node" pkg="rosserial_arduino" type="serial_node.py">
     <param name="port" type="string" value="/dev/ttyACM0"/>
-   </node> 
+   </node> -->
 
-   <!-- SetLocation
+   <!-- SetLocation 
    <node pkg="ros_controller" type="listener.py" name="listener" >
-   </node>  -->
+   </node> -->
 
-   <!-- Logger
-   <node pkg="ros_controller" type="locatioinlogger.py" name="locationlogger" >
-   </node>   -->
-
-   <!-- Odom -->
-   <node pkg="ros_controller" type="odom" name="odom" >
-   </node>
 
    <!-- Odom -->
    <node pkg="ros_controller" type="WriteService.py" name="WriteService" >
