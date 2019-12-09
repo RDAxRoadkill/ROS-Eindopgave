@@ -45,7 +45,7 @@ def callback(data):
 			print("Success StartButton")
 
 			# Here we can use different attempts to turn robot
-			oldAttempt()
+			goToAngle()
 
 		if data.buttons[7] == 0:
 			buttonInStart = False
@@ -114,9 +114,40 @@ def read_goal():
 
 # Attempt 01 to turn robot
 def goToAngle():
+	#Using a constant turning rate, in a loop robot SHOULD turn
 
-# Attempt 02 to turn robot
-def goToAngleTry2():
+	#Keeping calculation exactly the same
+	currentposX = 0.0
+	currentposY = 0.0
+
+	newGoalX = 40.0
+	newGoalY = 25.0
+
+	#Differences should be 40.0 & 25.0
+	in_x = newGoalX - currentPosX
+	in_y = newGoalY - currentPosY
+	print("X difference: " + in_x + " Y difference: " +in_y)
+
+	#Atan2 calc like old attempt
+	angle_to_goal = atan2(in_y, in_x)
+	#Calc new value for goal
+	currentPos = atan2(currentposX, currentPosY)
+	print("Angle to goal in radians: " + str(angle_to_goal))
+
+	degree_to_goal = math.degrees(angle_to_goal)
+	print("Angle to goal in degrees: " + str(degree_to_goal))
+
+	while degree_to_goal != currentPos:
+		print("Degree to goal: " + degree_to_goal)
+		print("CurrentPos: " + currentPos)
+
+		#TODO: Add right/Left logic here. currently just turning one way
+		speed.linear.x = 1.0
+		time.sleep(100)
+		currentPos = currentPos + 1.0
+		print("Updated currentPos" + currentPos)
+		time.sleep(100)
+
 
 # Attempt 00 to turn robot
 def oldAttempt():
@@ -135,7 +166,7 @@ def oldAttempt():
 	print("Goal location: " + x)
 
 	x = x.split(" ")
-
+	#TODO: Fix error w/ floats
 	newGoalX = float(x[0])
 	newGoalY = float(x[1])
 

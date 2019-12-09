@@ -36,9 +36,8 @@
    <!-- SetLocation 
    <node pkg="ros_controller" type="listener.py" name="listener" >
    </node> -->
-
-
    <!-- Odom -->
    <node pkg="ros_controller" type="WriteService.py" name="WriteService" >
    </node>
+   
 </launch>
