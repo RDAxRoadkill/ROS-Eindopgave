@@ -11,7 +11,7 @@ from gotogoal import *
 from ros_controller.srv import *
 
 
-currentLocation = "5.0 5.0"
+#currentLocation = "5.0 5.0"
 goal = "5.0 7.0"
 newgoal = "6.0 7.0"
 
@@ -69,9 +69,9 @@ def callback(data):
 			global buttonIn
 			x = read_file()
 	   		if x == "":
-			    print("Location robot: " + currentLocation)
-			    global currentLocation
-			    write_file(currentLocation)
+			    print("Location robot: " + x)
+			    global x
+			    write_file(x)
 			else:
 			    y = read_goal()
 			    write_file(y)
@@ -126,8 +126,8 @@ def goToAngle():
 	#Differences should be 40.0 & 25.0
 	in_x = newGoalX - currentX
 	in_y = newGoalY - currentY
-	print("X difference: " +  str(in_x))
-	print(" Y difference: " + str(in_y))
+	print("X difference: " + str(in_x))
+	print("Y difference: " + str(in_y))
 
 	#Atan2 calc like old attempt
 	angle_to_goal = atan2(in_y, in_x)
@@ -138,18 +138,27 @@ def goToAngle():
 	degree_to_goal = math.degrees(angle_to_goal)
 	print("Angle to goal in degrees: " + str(degree_to_goal))
 
-	while degree_to_goal != currentPos:
+	while degree_to_goal > currentPos:
 		print("Degree to goal: " + str(degree_to_goal))
 		print("CurrentPos: " + str(currentPos))
 
 		#TODO: Add right/Left logic here. currently just turning one way
-		#Note, adding too big a difference to x or z makes the turtle spin really fast, basically causing bugs
 		speed.linear.x = 1.0
-		speed.linear.z = 1.0
-		pub.publish(sleep)
-		time.sleep(10)
-		currentPos = currentPos + 1.0
-		print("Updated currentPos" + str(currentPos))
+		speed.angular.z = 1.0
+		pub.publish(speed)
+		#i = i +1
+		time.sleep(1)
+		currentPos = currentPos + 20.0
+		print("Updated currentPos: " + str(currentPos))
+	print("Gedraaid")
+	i = 0
+	while i < 10:
+		speed.linear.x = 1.0
+		speed.angular.z = 0.0	
+		pub.publish(speed)
+		time.sleep(1)
+		i = i +5
+	
 
 
 # Attempt 00 to turn robot
@@ -162,8 +171,8 @@ def oldAttempt():
 						
 	y = y.split(" ")
 
-    currentPosX = float(y[0])
-    currentPosY = float(y[1])
+    	currentPosX = float(y[0])
+    	currentPosY = float(y[1])
 
 	x = read_goal()
 	print("Goal location: " + x)
@@ -203,17 +212,17 @@ def oldAttempt():
 		pub.publish(speed)		
 
 def start():
-	global pub
+   	global pub
 	global speed
-	pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
+    	pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
 	#pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
 	speed = Twist()
     # subscribed to joystick inputs on topic "joy"
-	rospy.Subscriber("joy", Joy, callback)
+    	rospy.Subscriber("joy", Joy, callback)
 	rospy.Subscriber("/chatter", String, chatterCallback)
     # starts the node
-	rospy.init_node('Joy2Turtle')
-	rospy.spin()
+    	rospy.init_node('Joy2Turtle')
+    	rospy.spin()
 
 if __name__ == '__main__':
      start()
