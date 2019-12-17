@@ -10,10 +10,7 @@ from sensor_msgs.msg import Joy
 from gotogoal import *
 from ros_controller.srv import *
 
-
-#currentLocation = "5.0 5.0"
-goal = "5.0 7.0"
-newgoal = "6.0 7.0"
+currentLocation = ""
 
 oldAngleToGoal = 0.0
 
@@ -27,12 +24,11 @@ def callback(data):
 		if data.buttons[3] == 1 and buttonInY == False:
 			buttonInY = True
 			global buttonInY 
-
-			print("Success Y pressed")	
-			print("Goal location: " + goal)
-
-			global goal
-			write_file_goal(goal)
+			print("Success Y pressed")
+			
+			global currentLocation
+			write_goal(currentLocation)
+			print("Goal location: " + currentLocation)
 
 		if data.buttons[3] == 0:
 			buttonInY = False
@@ -41,9 +37,8 @@ def callback(data):
 		if data.buttons[7] == 1 and buttonInStart == False:
 			buttonInStart = True
 			global buttonInStart
-
 			print("Success StartButton")
-
+			
 			# Here we can use different attempts to turn robot
 			goToAngle()
 
@@ -55,8 +50,8 @@ def callback(data):
 			buttonInSelect = True
 			global buttonInSelect 
 			print("Succes SelectPress")
-			write_file("")
-			write_file_goal("")
+			write_location("")
+			write_goal("")
 			print("Orientation reset")
 
 		if data.buttons[6] == 0:
@@ -67,41 +62,34 @@ def callback(data):
 			print("Success X pressed")
 			buttonInX = True
 			global buttonIn
-			x = read_file()
-	   		if x == "":
-			    print("Location robot: " + x)
-			    global x
-			    write_file(x)
-			else:
-			    y = read_goal()
-			    write_file(y)
-			    print("Current location: " + y)
-			    print("Goal location: " + newgoal)
-		 	    global newgoal
-			    write_file_goal(newgoal)
+			x = read_location()
+			print("Read location from file:" + x)
+			global currentLocation
+			write_location(currentLocation)
+
 		if data.buttons[2] == 0:
 			buttonInX = False
 			global buttonInX
 			
 
 
-def chatterCallback(data):
-	print(data)
+def gpsCallback(data):
+	#print(data) #Uncomment to print GPS data
 	global currentLocation
 	currentLocation = data.data
 
-def write_file(data):
+def write_location(data):
 	f = open("/home/rosw/catkin_ws/src/ros_controller/src/safeLocation.txt", "w")
 	f.write(data)
 	f.close()
 
-def read_file():
+def read_location():
 	f = open("/home/rosw/catkin_ws/src/ros_controller/src/safeLocation.txt", "r")
 	data = f.readline()
 	f.close()
 	return data
 
-def write_file_goal(data):
+def write_goal(data):
 	f = open("/home/rosw/catkin_ws/src/ros_controller/src/goal.txt", "w")
 	f.write(data)
 	f.close()
@@ -214,15 +202,15 @@ def oldAttempt():
 def start():
    	global pub
 	global speed
-    	pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
+    pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
 	#pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
 	speed = Twist()
     # subscribed to joystick inputs on topic "joy"
-    	rospy.Subscriber("joy", Joy, callback)
-	rospy.Subscriber("/chatter", String, chatterCallback)
+    rospy.Subscriber("joy", Joy, callback)
+	rospy.Subscriber("/chatter", String, gpsCallback)
     # starts the node
-    	rospy.init_node('Joy2Turtle')
-    	rospy.spin()
+    rospy.init_node('Joy2Turtle')
+    rospy.spin()
 
 if __name__ == '__main__':
      start()
