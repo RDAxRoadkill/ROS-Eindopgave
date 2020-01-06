@@ -10,6 +10,7 @@ from sensor_msgs.msg import Joy
 from gotogoal import *
 from ros_controller.srv import *
 
+
 currentLocation = ""
 
 oldAngleToGoal = 0.0
@@ -24,12 +25,13 @@ def callback(data):
 		if data.buttons[3] == 1 and buttonInY == False:
 			buttonInY = True
 			global buttonInY 
-			print("Success Y pressed")
-			
+
+			print("Success Y pressed")	
+
 			global currentLocation
 			write_goal(currentLocation)
-			print("Goal location: " + currentLocation)
 
+			print("Goal location: " + currentLocation)
 		if data.buttons[3] == 0:
 			buttonInY = False
 			global buttonInY
@@ -37,8 +39,9 @@ def callback(data):
 		if data.buttons[7] == 1 and buttonInStart == False:
 			buttonInStart = True
 			global buttonInStart
+
 			print("Success StartButton")
-			
+
 			# Here we can use different attempts to turn robot
 			goToAngle()
 
@@ -63,9 +66,18 @@ def callback(data):
 			buttonInX = True
 			global buttonIn
 			x = read_location()
-			print("Read location from file:" + x)
+			print("Read location from file: " + x)
+	   		#if x == "":
+			print("Location robot: " + currentLocation)
 			global currentLocation
 			write_location(currentLocation)
+			#else:
+			#    y = read_goal()
+			#    write_location(y)
+			#    print("Current location: " + y)
+			#    print("Goal location: " + newgoal)
+		 	#    global newgoal
+			#    write_goal(newgoal)
 
 		if data.buttons[2] == 0:
 			buttonInX = False
@@ -108,10 +120,16 @@ def goToAngle():
 	currentX = 0.0
 	currentY = 0.0
 
-	newGoalX = 40.0
-	newGoalY = 25.0
+	#newGoalX = 40.0
+	#newGoalY = 25.0
+	y = read_file()
+	print("Current location: " + y)
+						
+	y = y.split(" ")
 
-	#Differences should be 40.0 & 25.0
+    	newGoalX = float(y[0])
+    	newGoalY = float(y[1])
+
 	in_x = newGoalX - currentX
 	in_y = newGoalY - currentY
 	print("X difference: " + str(in_x))
@@ -131,12 +149,12 @@ def goToAngle():
 		print("CurrentPos: " + str(currentPos))
 
 		#TODO: Add right/Left logic here. currently just turning one way
-		speed.linear.x = 1.0
+		speed.linear.x = 0.0
 		speed.angular.z = 1.0
 		pub.publish(speed)
 		#i = i +1
 		time.sleep(1)
-		currentPos = currentPos + 20.0
+		currentPos = currentPos + 1.0
 		print("Updated currentPos: " + str(currentPos))
 	print("Gedraaid")
 	i = 0
@@ -202,15 +220,15 @@ def oldAttempt():
 def start():
    	global pub
 	global speed
-    pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
+    	pub = rospy.Publisher('rosaria/cmd_vel', Twist, queue_size=10)
 	#pub = rospy.Publisher("/turtle1/cmd_vel", Twist, queue_size=10)
 	speed = Twist()
     # subscribed to joystick inputs on topic "joy"
-    rospy.Subscriber("joy", Joy, callback)
+    	rospy.Subscriber("joy", Joy, callback)
 	rospy.Subscriber("/chatter", String, gpsCallback)
     # starts the node
-    rospy.init_node('Joy2Turtle')
-    rospy.spin()
+    	rospy.init_node('Joy2Turtle')
+    	rospy.spin()
 
 if __name__ == '__main__':
      start()
