@@ -9,7 +9,7 @@ With all dependencies installed run `roslaunch ros_controller ros_controller.lau
 
 ## Wiki info on techniques used	
 
-
+- [Publisher Subscriber](http://wiki.ros.org/ROS/Tutorials/WritingPublisherSubscriber%28python%29)
 - [Services](http://wiki.ros.org/ROS/Tutorials/WritingServiceClient%28python%29)
 - [Joy package](http://wiki.ros.org/joy)
 - [Ros Serial](http://wiki.ros.org/rosserial)
