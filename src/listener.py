@@ -67,17 +67,10 @@ def callback(data):
 			global buttonIn
 			x = read_location()
 			print("Read location from file: " + x)
-	   		#if x == "":
 			print("Location robot: " + currentLocation)
 			global currentLocation
+			#currentLocation = "10 10" #Temp assignment
 			write_location(currentLocation)
-			#else:
-			#    y = read_goal()
-			#    write_location(y)
-			#    print("Current location: " + y)
-			#    print("Goal location: " + newgoal)
-		 	#    global newgoal
-			#    write_goal(newgoal)
 
 		if data.buttons[2] == 0:
 			buttonInX = False
@@ -91,9 +84,15 @@ def gpsCallback(data):
 	currentLocation = data.data
 
 def write_location(data):
-	f = open("/home/rosw/catkin_ws/src/ros_controller/src/safeLocation.txt", "w")
-	f.write(data)
-	f.close()
+	rospy.wait_for_service('write_service')
+    	try:
+		print ("Trying service call")
+        	write_service = rospy.ServiceProxy('write_service', WriteFile)
+        	resp1 = write_service(data)
+		print(resp1)
+        	return resp1
+    	except rospy.ServiceException, e:
+        	print "Service call failed: %s"%e
 
 def read_location():
 	f = open("/home/rosw/catkin_ws/src/ros_controller/src/safeLocation.txt", "r")
