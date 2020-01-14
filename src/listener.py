@@ -149,7 +149,7 @@ def goToAngle():
 
 		#TODO: Add right/Left logic here. currently just turning one way
 		speed.linear.x = 0.0
-		speed.angular.z = 1.0
+		speed.angular.z = 0.256
 		pub.publish(speed)
 		#i = i +1
 		time.sleep(1)
